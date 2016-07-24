@@ -2,15 +2,15 @@
 
 ## Introduction
 
-[harbor](https://github.com/vmware/harbor) is the enterprise-class registry server for docker distributions. It's written in golang and you can use it easily with Web UI in the browser.
+[harbor](https://github.com/vmware/harbor) is the enterprise-class registry server for docker distributions. It's written in golang and you can use it with the Web UI.
 
-[harbor-py](https://github.com/tobegit3hub/harbor-py) provides the native and compatible python SDK for harbor.
+[harbor-py](https://github.com/tobegit3hub/harbor-py) provides the native and compatible python SDK for harbor. The supported APIs are list below.
 
 - [ ] Projects APIs
   - [ ] Create project
 - Users APIs
   - [ ] Create user
-- [ ]Repositories APIs
+- [ ] Repositories APIs
   - [ ] Create repository
 - [ ] Others APIs
   - [ ] Search
