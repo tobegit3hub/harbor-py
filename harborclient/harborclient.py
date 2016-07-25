@@ -254,3 +254,17 @@ class HarborClient(object):
             print("Fail to get manifests with repo name: {}, tag: {}".format(repo_name, tag))
         return result
 
+    # GET /repositories/top
+    def get_top_accessed_repositories(self, count=None):
+        result = None
+        path = '%s://%s/api/repositories/top' % (self.protocol, self.host)
+        if count:
+            path += "?count=%s" % (count)
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = response.json()
+            print("Successfully get top accessed repositories, result: {}".format(result))
+        else:
+            print("Fail to get top accessed repositories")
+        return result

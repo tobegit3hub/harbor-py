@@ -23,6 +23,7 @@
 - [ ] Others APIs
   - [x] [Search](./examples/search.py)
   - [x] [Get statistics](./examples/get_statistics.py)
+  - [x] [Get top accessed repositories](./examples/get_top_accessed_repositories.py)
 
 ## Installation
 
