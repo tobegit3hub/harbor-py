@@ -8,6 +8,8 @@
   - [x] [Get projects](./examples/get_projects.py)
   - [x] [Create project](./examples/create_project.py)
   - [x] [Check project exist](./examples/check_project_exist.py)
+  - [x] [Set project publicity](./examples/set_project_publicity.py)
+  - [x] [Get project id from name](./examples/get_project_id_from_name.py)
 - [x] Users APIs
   - [x] [Get users](./examples/get_users.py)
   - [x] [Create user](./examples/create_user.py)
