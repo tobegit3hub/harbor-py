@@ -59,19 +59,42 @@ class HarborClient(object):
         if response.status_code == 200:
             result = response.json()
             print("Successfully get search result: {}".format(result))
+        else:
+            print("Fail to get search result")
         return result
    
     # GET /projects
     def get_projects(self, project_name=None, is_public=None):
-        # TODO: support parameter check
+        # TODO: support parameter
         result = None
         path = '%s://%s/api/projects' % (self.protocol, self.host)
         response = requests.get(path, cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
            result = response.json()
-           print("Successfully get search result: {}".format(result))
+           print("Successfully get projects result: {}".format(result))
+        else:
+           print("Fail to get projects result")
         return result
 
+    # HEAD /projects
+    def check_project_exist(self, project_name):
+        # TODO: need test
+        result = None
+        path = '%s://%s/api/projects?project_name=%s' % (self.protocol, self.host, project_name)
+        response = requests.head(path, cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+           result = response.json()
+           print("Successfully check project exist, result: {}".format(result))
+        else:
+           print("Fail to check project exist")
+        return result
+
+    # POST /projects
+    def create_project(self):
+        # TODO
+        pass
+
+    # TODO: remove this
     def get_project_id(session_id, project_name):
         registry_data = requests.get('%s://%s/api/projects?project_name=%s' %
                                      (protocol, host, project_name),
@@ -95,6 +118,7 @@ class HarborClient(object):
 
         return None
 
+    # PUT /projects/{project_id}/publicity
     def set_project_private(self, project_name):
 
         project_id = self.get_project_id_from_name(project_name)
@@ -109,4 +133,10 @@ class HarborClient(object):
             print("Success to set project {} private".format(project_name))
         else:
             print("Fail to set project private")
+
+     # TODO: implement these
+     # POST /projects/{project_id}/logs/filter
+     # GET /projects/{project_id}/members/
+     # GET /projects/{project_id}/members/{user_id}
+     # 
 
