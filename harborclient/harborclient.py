@@ -241,4 +241,16 @@ class HarborClient(object):
         return result
 
     # GET /repositories/manifests
+    def get_repository_manifests(self, repo_name, tag):
+        # TODO: need test
+        result = None
+        path = '%s://%s/api/repositories/manifests?repo_name=%s&tag=%s' % (self.protocol, self.host, repo_name, tag)
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = response.json()
+            print("Successfully get manifests with repo name: {}, tag: {}, result: {}".format(repo_name, tag, result))
+        else:
+            print("Fail to get manifests with repo name: {}, tag: {}".format(repo_name, tag))
+        return result
 
