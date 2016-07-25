@@ -29,8 +29,7 @@
 ## Installation
 
 ```
-git clone https://github.com/tobegit3hub/harbor-py
-python ./setup.py install
+pip install harbor-py
 ```
 
 ## Usage
@@ -58,3 +57,10 @@ For more usage, please refer to the [examples](./examples/).
 If you have any suggestion for this project, feel free to subbmit [issues](https://github.com/tobegit3hub/harbor-py/issues) or send [pull-requests](https://github.com/tobegit3hub/harbor-py/pulls) to `harbor-py`.
 
 The `harbor` APIs may change occasionally, checkout the complete API list [here](https://github.com/vmware/harbor/blob/master/docs/configure_swagger.md).
+
+Publish package to [pypi](https://pypi.python.org/pypi/harbor-py/) with the following commands.
+
+```
+python setup.py register -r pypi
+python setup.py sdist upload  -r pypi
+```
