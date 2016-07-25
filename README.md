@@ -1,6 +1,6 @@
 ## Introduction
 
-[harbor](https://github.com/vmware/harbor) is the enterprise-class registry server for docker distributions.
+[harbor](https://github.com/vmware/harbor) is the enterprise-class registry server for docker distribution.
 
 [harbor-py](https://github.com/tobegit3hub/harbor-py) is the native and compatible python SDK for harbor. The supported APIs are list below.
 
@@ -29,7 +29,7 @@
 ## Installation
 
 ```
-pip install harbor-py
+pip install -U harbor-py
 ```
 
 ## Usage
@@ -58,7 +58,7 @@ If you have any suggestion for this project, feel free to subbmit [issues](https
 
 The `harbor` APIs may change occasionally, checkout the complete API list [here](https://github.com/vmware/harbor/blob/master/docs/configure_swagger.md).
 
-Publish package to [pypi](https://pypi.python.org/pypi/harbor-py/) with the following commands.
+Publish `harbor-py` package to [pypi](https://pypi.python.org/pypi/harbor-py/) server with the following commands.
 
 ```
 python setup.py register -r pypi
