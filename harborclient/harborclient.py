@@ -195,6 +195,19 @@ class HarborClient(object):
         return result
 
     # PUT /users/{user_id}
+    def update_user_profile(self, user_id, email, realname, comment):
+        # TODO: support not passing comment
+        result = False
+        path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host, user_id, user_id)
+        request_body = simplejson.dumps({'email': email, 'realname': realname, 'comment': comment})
+        response = requests.put(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        if response.status_code == 200:
+            result = True
+            print("Successfully update user profile with user id: {}".format(user_id))
+        else:
+            print("Fail to update user profile with user id: {}, response code: {}".format(user_id, response.status_code))
+        return result
+
     # DELETE /users/{user_id}
     def delete_user(self, user_id):
         result = False
