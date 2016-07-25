@@ -11,6 +11,10 @@ password = "Harbor12345"
 
 client = harborclient.HarborClient(host, user, password)
 
-# Delete user
-user_id = 6
-print(client.delete_user(user_id))
+# Change password
+
+user_id = 5 
+old_password = "test-password"
+new_password = "new_password"
+
+client.change_password(user_id, old_password, new_password)

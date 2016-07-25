@@ -8,11 +8,12 @@
   - [x] [Get projects](./examples/get_projects.py)
   - [x] [Create project](./examples/create_project.py)
   - [x] [Check project exist](./examples/check_project_exist.py)
-- [ ] Users APIs
+- [x] Users APIs
   - [x] [Get users](./examples/get_users.py)
   - [x] [Create user](./examples/create_user.py)
+  - [x] [Update user profile](./examples/update_user_profile.py)
   - [x] [Delete user](./examples/delete_user.py)
-  - [ ] Change password
+  - [x] [Change password](./examples/change_password.py)
   - [x] [Promote as admin](./examples/promote_as_admin.py)
 - [ ] Repositories APIs
   - [x] [Get repositories](./examples/get_repositories.py)

@@ -195,10 +195,8 @@ class HarborClient(object):
         return result
 
     # PUT /users/{user_id}
-
     # DELETE /users/{user_id}
     def delete_user(self, user_id):
-        # TODO: need test
         result = False
         path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host,
                                                     user_id, user_id)
@@ -212,9 +210,19 @@ class HarborClient(object):
         return result
 
     # PUT /users/{user_id}/password
-    def change_password(self):
-        # TODO: need implement
-        pass
+    def change_password(self, user_id, old_password, new_password):
+        result = False
+        path = '%s://%s/api/users/%s/password?user_id=%s' % (self.protocol, self.host,
+                                                    user_id, user_id)
+        request_body = simplejson.dumps({'old_password': old_password, 'new_password': new_password})
+        response = requests.put(
+            path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        if response.status_code == 200:
+            result = True
+            print("Successfully change password for user id: {}".format(user_id))
+        else:
+            print("Fail to change password for user id: {}".format(user_id))
+        return result
 
     # PUT /users/{user_id}/sysadmin
     def promote_as_admin(self, user_id):
