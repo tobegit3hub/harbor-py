@@ -98,7 +98,6 @@ class HarborClient(object):
     def create_project(self, project_name, is_public=False):
         result = False
         path = '%s://%s/api/projects' % (self.protocol, self.host)
-        #request_body = simplejson.dumps({'project_name': project_name, 'public': is_public})
         request_body = simplejson.dumps({'project_name': project_name, 'public': is_public})
         response = requests.post(path, cookies={'beegosessionID': self.session_id}, data=request_body)
         if response.status_code == 201 or response.status_code == 500:
@@ -109,47 +108,21 @@ class HarborClient(object):
             print("Fail to create project with project name: {}, response code: {}".format(project_name, response.status_code))
         return result
 
-    # TODO: remove this
-    def get_project_id(session_id, project_name):
-        registry_data = requests.get('%s://%s/api/projects?project_name=%s' %
-                                     (protocol, host, project_name),
-                                     cookies={'beegosessionID': session_id})
-        if registry_data.status_code == 200 and registry_data.json():
-            project_id = registry_data.json()[0]['project_id']
-            print("Successfully get project id: {}".format(project_id))
-            # get image list
-            registry_list_data = requests.get(
-                '%s://%s/api/repositories?project_id=%s' %
-                (protocol, host, project_id),
-                cookies={'beegosessionID': session_id})
-            if registry_list_data.status_code == 200:
-                data = ['%s/%s' % (host, x) for x in registry_list_data.json()]
-                print("Successfully get project info, data: {}".format(data))
-                return data
-            else:
-                print(
-                    "Fail to get project info, response status code: {}".format(
-                        registry_list_data.status_code))
-
-        return None
 
     # PUT /projects/{project_id}/publicity
-    def set_project_private(self, project_name):
-
-        project_id = self.get_project_id_from_name(project_name)
-
-        # set project private
-        set_request = requests.put(
-            '%s://%s/api/projects/%s/publicity?project_id=%s' %
-            (self.protocol, self.host, project_id, project_id),
-            cookies={'beegosessionID': self.session_id},
-            data=simplejson.dumps({'public': False}))
-        if set_request.status_code == 200:
-            print("Success to set project {} private".format(project_name))
+    def set_project_publicity(self, project_id, is_public):
+        result = False
+        path = '%s://%s/api/projects/%s/publicity?project_id=%s' % (self.protocol, self.host, project_id, project_id)
+        request_body = simplejson.dumps({'public': is_public})
+        response = requests.put(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        if response.status_code == 200:
+            result = True
+            print("Success to set project id: {} with publicity: {}".format(project_id, is_public))
         else:
-            print("Fail to set project private")
+            print("Fail to set publicity to project id: {} with status code: {}".format(project_id, response.status_code))
+        return result
 
-    # TODO: implement these
+    # TODO: implement these APIs
     # POST /projects/{project_id}/logs/filter
     # GET /projects/{project_id}/members/
     # GET /projects/{project_id}/members/{user_id}
