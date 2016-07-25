@@ -14,6 +14,7 @@
   - [ ] Create repository
 - [ ] Others APIs
   - [x] [Search](./examples/search.py)
+  - [x] [Get statistics](./examples/get_statistics.py)
 
 ## Installation
 

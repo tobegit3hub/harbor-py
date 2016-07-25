@@ -4,7 +4,6 @@ import requests
 import simplejson
 
 
-
 class HarborClient(object):
     def __init__(self, host, user, password, protocol="http"):
         self.host = host
@@ -54,39 +53,46 @@ class HarborClient(object):
     # GET /search
     def search(self, query_string):
         result = None
-        path = '%s://%s/api/search?q=%s' % (self.protocol, self.host, query_string)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id})
+        path = '%s://%s/api/search?q=%s' % (self.protocol, self.host,
+                                            query_string)
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
             print("Successfully get search result: {}".format(result))
         else:
             print("Fail to get search result")
         return result
-   
-    # GET /projects
+
+# GET /projects
+
     def get_projects(self, project_name=None, is_public=None):
         # TODO: support parameter
         result = None
         path = '%s://%s/api/projects' % (self.protocol, self.host)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id})
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
-           result = response.json()
-           print("Successfully get projects result: {}".format(result))
+            result = response.json()
+            print("Successfully get projects result: {}".format(result))
         else:
-           print("Fail to get projects result")
+            print("Fail to get projects result")
         return result
 
     # HEAD /projects
     def check_project_exist(self, project_name):
         # TODO: need test
         result = None
-        path = '%s://%s/api/projects?project_name=%s' % (self.protocol, self.host, project_name)
-        response = requests.head(path, cookies={'beegosessionID': self.session_id})
+        path = '%s://%s/api/projects?project_name=%s' % (
+            self.protocol, self.host, project_name)
+        response = requests.head(
+            path, cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
-           result = response.json()
-           print("Successfully check project exist, result: {}".format(result))
+            result = response.json()
+            print("Successfully check project exist, result: {}".format(
+                result))
         else:
-           print("Fail to check project exist")
+            print("Fail to check project exist")
         return result
 
     # POST /projects
@@ -134,9 +140,20 @@ class HarborClient(object):
         else:
             print("Fail to set project private")
 
-     # TODO: implement these
-     # POST /projects/{project_id}/logs/filter
-     # GET /projects/{project_id}/members/
-     # GET /projects/{project_id}/members/{user_id}
-     # 
+    # TODO: implement these
+    # POST /projects/{project_id}/logs/filter
+    # GET /projects/{project_id}/members/
+    # GET /projects/{project_id}/members/{user_id}
 
+    # GET /statistics
+    def get_statistics(self):
+        result = None
+        path = '%s://%s/api/statistics' % (self.protocol, self.host)
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = response.json()
+            print("Successfully get statistics: {}".format(result))
+        else:
+            print("Fail to get statistics result")
+        return result
