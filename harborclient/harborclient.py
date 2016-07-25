@@ -172,6 +172,19 @@ class HarborClient(object):
         return result
 
     # POST /users
+    def create_user(self, username, email, password, realname, comment):
+        result = False
+        path = '%s://%s/api/users' % (self.protocol, self.host)
+        #request_body = simplejson.dumps({'user_id': user_id, 'username': username, 'email': email, 'password': password, 'realname': realname, 'comment': comment, 'deleted': deleted})
+        request_body = simplejson.dumps({'username': username, 'email': email, 'password': password, 'realname': realname, 'comment': comment})
+        #request_body = simplejson.dumps({'user': {'username': username, 'email': email, 'password': password}})
+        response = requests.post(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        if response.status_code == 201:
+            result = True
+            print("Successfully create user with username: {}".format(username))
+        else:
+            print("Fail to create user with username: {}, response code: {}".format(username, response.status_code))
+        return result
 
     # PUT /users/{user_id}
 
