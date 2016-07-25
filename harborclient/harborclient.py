@@ -51,14 +51,27 @@ class HarborClient(object):
             pritn("Fail to get project id from project name", project_name)
             return None
 
+    # GET /search
     def search(self, query_string):
+        result = None
         path = '%s://%s/api/search?q=%s' % (self.protocol, self.host, query_string)
+        response = requests.get(path, cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = response.json()
+            print("Successfully get search result: {}".format(result))
+        return result
+   
+    # GET /projects
+    def get_projects(self, project_name=None, is_public=None):
+        # TODO: support parameter check
+        result = None
+        path = '%s://%s/api/projects' % (self.protocol, self.host)
         response = requests.get(path, cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
            result = response.json()
            print("Successfully get search result: {}".format(result))
-           return result
-    
+        return result
+
     def get_project_id(session_id, project_name):
         registry_data = requests.get('%s://%s/api/projects?project_name=%s' %
                                      (protocol, host, project_name),

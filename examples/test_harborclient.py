@@ -5,7 +5,7 @@ sys.path.append("../harborclient/")
 
 import harborclient
 
-host = "10.69.1.246"
+host = "127.0.0.1"
 user = "admin"
 password = "Harbor12345"
 

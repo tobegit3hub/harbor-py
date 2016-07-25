@@ -10,4 +10,12 @@ user = "admin"
 password = "Harbor12345"
 
 client = harborclient.HarborClient(host, user, password)
-print(client.search("library"))
+
+# Get all projects
+print(client.get_projects())
+
+# Get projects with project_name
+print("TODO")
+
+# Get project iwth is_public
+print("TODO")
