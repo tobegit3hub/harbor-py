@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+
+import sys
+sys.path.append("../harborclient/")
+
+import harborclient
+
+host = "127.0.0.1"
+user = "admin"
+password = "Harbor12345"
+
+client = harborclient.HarborClient(host, user, password)
+
+# Get all users
+print(client.get_users())
+
+# Get user with user_name
+print("TODO")

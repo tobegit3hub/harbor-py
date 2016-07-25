@@ -35,8 +35,8 @@ class HarborClient(object):
                      cookies={'beegosessionID': self.session_id})
         print("Successfully logout")
 
+    # Get project id 
     def get_project_id_from_name(self, project_name):
-        # get project id
         registry_data = requests.get(
             '%s://%s/api/projects?project_name=%s' %
             (self.protocol, self.host, project_name),
@@ -64,8 +64,7 @@ class HarborClient(object):
             print("Fail to get search result")
         return result
 
-# GET /projects
-
+    # GET /projects
     def get_projects(self, project_name=None, is_public=None):
         # TODO: support parameter
         result = None
@@ -157,3 +156,57 @@ class HarborClient(object):
         else:
             print("Fail to get statistics result")
         return result
+
+    # GET /users
+    def get_users(self, user_name=None):
+        # TODO: support parameter
+        result = None
+        path = '%s://%s/api/users' % (self.protocol, self.host)
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = response.json()
+            print("Successfully get users result: {}".format(result))
+        else:
+            print("Fail to get users result")
+        return result 
+
+
+    # POST /users
+
+    # PUT /users/{user_id}
+
+    # DELETE /users/{user_id} 
+    def delete_user(self, user_id):
+        # TODO: need test
+        result = False
+        path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host, user_id, user_id)
+        response = requests.delete(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = True
+            print("Successfully delete user with id: {}".format(user_id))
+        else:
+            print("Fail to delete user with id: {}".format(user_id))
+        return result
+
+    # PUT /users/{user_id}/password
+    def change_password(self):
+        # TODO: need implement
+        pass
+
+    # PUT /users/{user_id}/sysadmin
+    def promote_as_admin(self, user_id):
+        # TODO: need test
+        result = False
+        path = '%s://%s/api/users/%s/sysadmin?user_id=%s' % (self.protocol, self.host, user_id, user_id)
+        response = requests.put(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = True
+            print("Successfully promote user as admin with id: {}".format(user_id))
+        else:
+            print("Fail to promote user as admin with id: {}".format(user_id))
+        return result
+
+

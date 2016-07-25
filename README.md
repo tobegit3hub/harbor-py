@@ -9,7 +9,11 @@
   - [x] [Check project exist](./examples/check_project_exist.py)
   - [ ] Create project
 - [ ] Users APIs
-  - [ ] Create user
+  - [x] Get users
+  - [ ] [Create user](./examples/get_users.py)
+  - [x] [Delete user](./examples/delete_user.py)
+  - [ ] Change password
+  - [x] [Promote as admin](./examples/promote_as_admin.py)
 - [ ] Repositories APIs
   - [ ] Create repository
 - [ ] Others APIs
