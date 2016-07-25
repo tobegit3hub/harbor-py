@@ -20,11 +20,11 @@
   - [ ] Delete repository
   - [x] [Get repository tags](./examples/get_repository_tags.py)
   - [x] [Get repository manifests](./examples/get_repository_manifests.py)
-- [ ] Others APIs
+- [x] Others APIs
   - [x] [Search](./examples/search.py)
   - [x] [Get statistics](./examples/get_statistics.py)
   - [x] [Get top accessed repositories](./examples/get_top_accessed_repositories.py)
-  - [ ] Get logs
+  - [x] [Get logs](./examples/get_logs.py)
 
 ## Installation
 

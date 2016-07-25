@@ -283,11 +283,24 @@ class HarborClient(object):
         return result
 
     # GET /logs
+    def get_logs(self, lines=None, start_time=None, end_time=None):
+        result = None
+        path = '%s://%s/api/logs' % (
+            self.protocol, self.host)
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = response.json()
+            print(
+                "Successfully get logs")
+        else:
+            print("Fail to get logs and response code: {}".format(response.status_code))
+        return result
+ 
 
 
 def main():
-    print("Start harborclient")
-
+    pass
 
 if __name__ == "__main__":
     main()
