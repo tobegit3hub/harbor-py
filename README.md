@@ -15,10 +15,9 @@
   - [x] [Delete user](./examples/delete_user.py)
   - [x] [Change password](./examples/change_password.py)
   - [x] [Promote as admin](./examples/promote_as_admin.py)
-- [ ] Repositories APIs
+- [x] Repositories APIs
   - [x] [Get repositories](./examples/get_repositories.py)
-  - [ ] Create repository
-  - [ ] Delete repository
+  - [x] [Delete repository](./examples/delete_repository.py)
   - [x] [Get repository tags](./examples/get_repository_tags.py)
   - [x] [Get repository manifests](./examples/get_repository_manifests.py)
 - [x] Others APIs
