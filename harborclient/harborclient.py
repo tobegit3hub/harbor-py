@@ -4,15 +4,6 @@ import requests
 import simplejson
 
 
-def hello():
-    print("hello")
-
-
-host = "10.69.1.246"
-user = "admin"
-password = "Harbor12345"
-protocol = "http"
-
 
 class HarborClient(object):
     def __init__(self, host, user, password, protocol="http"):
@@ -60,6 +51,14 @@ class HarborClient(object):
             pritn("Fail to get project id from project name", project_name)
             return None
 
+    def search(self, query_string):
+        path = '%s://%s/api/search?q=%s' % (self.protocol, self.host, query_string)
+        response = requests.get(path, cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+           result = response.json()
+           print("Successfully get search result: {}".format(result))
+           return result
+    
     def get_project_id(session_id, project_name):
         registry_data = requests.get('%s://%s/api/projects?project_name=%s' %
                                      (protocol, host, project_name),
@@ -98,6 +97,3 @@ class HarborClient(object):
         else:
             print("Fail to set project private")
 
-
-client = HarborClient(host, user, password)
-client.set_project_private("library")
