@@ -6,11 +6,11 @@
 
 - [ ] Projects APIs
   - [x] [Get projects](./examples/get_projects.py)
-  - [x] [Check project exist](./examples/check_project_exist.py)
   - [ ] Create project
+  - [x] [Check project exist](./examples/check_project_exist.py)
 - [ ] Users APIs
-  - [x] Get users
-  - [ ] [Create user](./examples/get_users.py)
+  - [x] [Get users](./examples/get_users.py)
+  - [ ] Create user
   - [x] [Delete user](./examples/delete_user.py)
   - [ ] Change password
   - [x] [Promote as admin](./examples/promote_as_admin.py)
@@ -24,6 +24,7 @@
   - [x] [Search](./examples/search.py)
   - [x] [Get statistics](./examples/get_statistics.py)
   - [x] [Get top accessed repositories](./examples/get_top_accessed_repositories.py)
+  - [ ] Get logs
 
 ## Installation
 
@@ -35,7 +36,7 @@ python ./setup.py install
 ## Usage
 
 ```
-import harborclient
+from harborclient import harborclient
 
 host = "127.0.0.1"
 user = "admin"
@@ -43,9 +44,11 @@ password = "Harbor12345"
 
 client = harborclient.HarborClient(host, user, password)
 
-client.search("library")
 client.get_projects()
-client.check_project_exist("test-project")
+client.get_users()
+client.get_statistics()
+client.get_top_accessed_repositories()
+client.search("library")
 ```
 
 For more usage, please refer to the [examples](./examples/).
@@ -54,4 +57,4 @@ For more usage, please refer to the [examples](./examples/).
 
 If you have any suggestion for this project, feel free to subbmit [issues](https://github.com/tobegit3hub/harbor-py/issues) or send [pull-requests](https://github.com/tobegit3hub/harbor-py/pulls) to `harbor-py`.
 
-The `harbor` APIs may change, checkout the complete API list [here](https://github.com/vmware/harbor/blob/master/docs/configure_swagger.md).
+The `harbor` APIs may change occasionally, checkout the complete API list [here](https://github.com/vmware/harbor/blob/master/docs/configure_swagger.md).

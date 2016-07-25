@@ -268,3 +268,12 @@ class HarborClient(object):
         else:
             print("Fail to get top accessed repositories")
         return result
+
+    # GET /logs
+
+
+def main():
+    print("Start harborclient")
+
+if __name__ == "__main__":
+    main()
