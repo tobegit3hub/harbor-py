@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo yapf -i ./*.py
+sudo yapf -i ./harborclient/*.py

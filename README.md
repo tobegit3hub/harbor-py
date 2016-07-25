@@ -8,7 +8,7 @@
 
 - [ ] Projects APIs
   - [ ] Create project
-- Users APIs
+- [ ] Users APIs
   - [ ] Create user
 - [ ] Repositories APIs
   - [ ] Create repository
