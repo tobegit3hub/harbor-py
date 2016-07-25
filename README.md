@@ -4,9 +4,9 @@
 
 [harbor-py](https://github.com/tobegit3hub/harbor-py) is the native and compatible python SDK for harbor. The supported APIs are list below.
 
-- [ ] Projects APIs
+- [x] Projects APIs
   - [x] [Get projects](./examples/get_projects.py)
-  - [ ] Create project
+  - [x] [Create project](./examples/create_project.py)
   - [x] [Check project exist](./examples/check_project_exist.py)
 - [ ] Users APIs
   - [x] [Get users](./examples/get_users.py)

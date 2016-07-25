@@ -95,9 +95,19 @@ class HarborClient(object):
         return result
 
     # POST /projects
-    def create_project(self):
-        # TODO
-        pass
+    def create_project(self, project_name, is_public=False):
+        result = False
+        path = '%s://%s/api/projects' % (self.protocol, self.host)
+        #request_body = simplejson.dumps({'project_name': project_name, 'public': is_public})
+        request_body = simplejson.dumps({'project_name': project_name, 'public': is_public})
+        response = requests.post(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        if response.status_code == 201 or response.status_code == 500:
+            # TODO: the response return 500 sometimes
+            result = True
+            print("Successfully create project with project name: {}".format(project_name))
+        else:
+            print("Fail to create project with project name: {}, response code: {}".format(project_name, response.status_code))
+        return result
 
     # TODO: remove this
     def get_project_id(session_id, project_name):
@@ -175,9 +185,7 @@ class HarborClient(object):
     def create_user(self, username, email, password, realname, comment):
         result = False
         path = '%s://%s/api/users' % (self.protocol, self.host)
-        #request_body = simplejson.dumps({'user_id': user_id, 'username': username, 'email': email, 'password': password, 'realname': realname, 'comment': comment, 'deleted': deleted})
         request_body = simplejson.dumps({'username': username, 'email': email, 'password': password, 'realname': realname, 'comment': comment})
-        #request_body = simplejson.dumps({'user': {'username': username, 'email': email, 'password': password}})
         response = requests.post(path, cookies={'beegosessionID': self.session_id}, data=request_body)
         if response.status_code == 201:
             result = True
