@@ -35,7 +35,7 @@ class HarborClient(object):
                      cookies={'beegosessionID': self.session_id})
         print("Successfully logout")
 
-    # Get project id 
+    # Get project id
     def get_project_id_from_name(self, project_name):
         registry_data = requests.get(
             '%s://%s/api/projects?project_name=%s' %
@@ -169,20 +169,20 @@ class HarborClient(object):
             print("Successfully get users result: {}".format(result))
         else:
             print("Fail to get users result")
-        return result 
-
+        return result
 
     # POST /users
 
     # PUT /users/{user_id}
 
-    # DELETE /users/{user_id} 
+    # DELETE /users/{user_id}
     def delete_user(self, user_id):
         # TODO: need test
         result = False
-        path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host, user_id, user_id)
-        response = requests.delete(path,
-                                cookies={'beegosessionID': self.session_id})
+        path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host,
+                                                    user_id, user_id)
+        response = requests.delete(
+            path, cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
             print("Successfully delete user with id: {}".format(user_id))
@@ -199,29 +199,34 @@ class HarborClient(object):
     def promote_as_admin(self, user_id):
         # TODO: need test
         result = False
-        path = '%s://%s/api/users/%s/sysadmin?user_id=%s' % (self.protocol, self.host, user_id, user_id)
+        path = '%s://%s/api/users/%s/sysadmin?user_id=%s' % (
+            self.protocol, self.host, user_id, user_id)
         response = requests.put(path,
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
-            print("Successfully promote user as admin with id: {}".format(user_id))
+            print("Successfully promote user as admin with id: {}".format(
+                user_id))
         else:
             print("Fail to promote user as admin with id: {}".format(user_id))
         return result
-
 
     # GET /repositories
     def get_repositories(self, project_id, query_string=None):
         # TODO: support parameter
         result = None
-        path = '%s://%s/api/repositories?project_id=%s' % (self.protocol, self.host, project_id)
+        path = '%s://%s/api/repositories?project_id=%s' % (
+            self.protocol, self.host, project_id)
         response = requests.get(path,
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get repositories with id: {}, result: {}".format(project_id, result))
+            print(
+                "Successfully get repositories with id: {}, result: {}".format(
+                    project_id, result))
         else:
-            print("Fail to get repositories result with id: {}".format(project_id))
+            print("Fail to get repositories result with id: {}".format(
+                project_id))
         return result
 
     # DELETE /repositories
@@ -230,12 +235,14 @@ class HarborClient(object):
     def get_repository_tags(self, repo_name):
         # TODO: need test
         result = None
-        path = '%s://%s/api/repositories/tags?repo_name=%s' % (self.protocol, self.host, repo_name)
+        path = '%s://%s/api/repositories/tags?repo_name=%s' % (
+            self.protocol, self.host, repo_name)
         response = requests.get(path,
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get tag with repo name: {}, result: {}".format(repo_name, result))
+            print("Successfully get tag with repo name: {}, result: {}".format(
+                repo_name, result))
         else:
             print("Fail to get tags with repo name: {}".format(repo_name))
         return result
@@ -244,14 +251,18 @@ class HarborClient(object):
     def get_repository_manifests(self, repo_name, tag):
         # TODO: need test
         result = None
-        path = '%s://%s/api/repositories/manifests?repo_name=%s&tag=%s' % (self.protocol, self.host, repo_name, tag)
+        path = '%s://%s/api/repositories/manifests?repo_name=%s&tag=%s' % (
+            self.protocol, self.host, repo_name, tag)
         response = requests.get(path,
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get manifests with repo name: {}, tag: {}, result: {}".format(repo_name, tag, result))
+            print(
+                "Successfully get manifests with repo name: {}, tag: {}, result: {}".format(
+                    repo_name, tag, result))
         else:
-            print("Fail to get manifests with repo name: {}, tag: {}".format(repo_name, tag))
+            print("Fail to get manifests with repo name: {}, tag: {}".format(
+                repo_name, tag))
         return result
 
     # GET /repositories/top
@@ -264,7 +275,9 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get top accessed repositories, result: {}".format(result))
+            print(
+                "Successfully get top accessed repositories, result: {}".format(
+                    result))
         else:
             print("Fail to get top accessed repositories")
         return result
@@ -274,6 +287,7 @@ class HarborClient(object):
 
 def main():
     print("Start harborclient")
+
 
 if __name__ == "__main__":
     main()
