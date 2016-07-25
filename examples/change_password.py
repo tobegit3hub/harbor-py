@@ -13,7 +13,7 @@ client = harborclient.HarborClient(host, user, password)
 
 # Change password
 
-user_id = 5 
+user_id = 5
 old_password = "test-password"
 new_password = "new_password"
 

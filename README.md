@@ -10,6 +10,9 @@
   - [x] [Check project exist](./examples/check_project_exist.py)
   - [x] [Set project publicity](./examples/set_project_publicity.py)
   - [x] [Get project id from name](./examples/get_project_id_from_name.py)
+  - [ ] Get project access logs
+  - [ ] Get project member
+  - [ ] Get project and user member
 - [x] Users APIs
   - [x] [Get users](./examples/get_users.py)
   - [x] [Create user](./examples/create_user.py)

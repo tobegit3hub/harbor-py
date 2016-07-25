@@ -7,7 +7,6 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-
 setup(
     name='harbor-py',
 
@@ -15,7 +14,6 @@ setup(
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version='1.0.1',
-
     description='The missing harbor python SDK',
 
     # The project's main homepage.

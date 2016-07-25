@@ -98,28 +98,40 @@ class HarborClient(object):
     def create_project(self, project_name, is_public=False):
         result = False
         path = '%s://%s/api/projects' % (self.protocol, self.host)
-        request_body = simplejson.dumps({'project_name': project_name, 'public': is_public})
-        response = requests.post(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        request_body = simplejson.dumps({'project_name': project_name,
+                                         'public': is_public})
+        response = requests.post(
+            path,
+            cookies={'beegosessionID': self.session_id},
+            data=request_body)
         if response.status_code == 201 or response.status_code == 500:
             # TODO: the response return 500 sometimes
             result = True
-            print("Successfully create project with project name: {}".format(project_name))
+            print("Successfully create project with project name: {}".format(
+                project_name))
         else:
-            print("Fail to create project with project name: {}, response code: {}".format(project_name, response.status_code))
+            print(
+                "Fail to create project with project name: {}, response code: {}".format(
+                    project_name, response.status_code))
         return result
-
 
     # PUT /projects/{project_id}/publicity
     def set_project_publicity(self, project_id, is_public):
         result = False
-        path = '%s://%s/api/projects/%s/publicity?project_id=%s' % (self.protocol, self.host, project_id, project_id)
+        path = '%s://%s/api/projects/%s/publicity?project_id=%s' % (
+            self.protocol, self.host, project_id, project_id)
         request_body = simplejson.dumps({'public': is_public})
-        response = requests.put(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        response = requests.put(path,
+                                cookies={'beegosessionID': self.session_id},
+                                data=request_body)
         if response.status_code == 200:
             result = True
-            print("Success to set project id: {} with publicity: {}".format(project_id, is_public))
+            print("Success to set project id: {} with publicity: {}".format(
+                project_id, is_public))
         else:
-            print("Fail to set publicity to project id: {} with status code: {}".format(project_id, response.status_code))
+            print(
+                "Fail to set publicity to project id: {} with status code: {}".format(
+                    project_id, response.status_code))
         return result
 
     # TODO: implement these APIs
@@ -158,27 +170,45 @@ class HarborClient(object):
     def create_user(self, username, email, password, realname, comment):
         result = False
         path = '%s://%s/api/users' % (self.protocol, self.host)
-        request_body = simplejson.dumps({'username': username, 'email': email, 'password': password, 'realname': realname, 'comment': comment})
-        response = requests.post(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        request_body = simplejson.dumps({'username': username,
+                                         'email': email,
+                                         'password': password,
+                                         'realname': realname,
+                                         'comment': comment})
+        response = requests.post(
+            path,
+            cookies={'beegosessionID': self.session_id},
+            data=request_body)
         if response.status_code == 201:
             result = True
-            print("Successfully create user with username: {}".format(username))
+            print("Successfully create user with username: {}".format(
+                username))
         else:
-            print("Fail to create user with username: {}, response code: {}".format(username, response.status_code))
+            print(
+                "Fail to create user with username: {}, response code: {}".format(
+                    username, response.status_code))
         return result
 
     # PUT /users/{user_id}
     def update_user_profile(self, user_id, email, realname, comment):
         # TODO: support not passing comment
         result = False
-        path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host, user_id, user_id)
-        request_body = simplejson.dumps({'email': email, 'realname': realname, 'comment': comment})
-        response = requests.put(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host,
+                                                    user_id, user_id)
+        request_body = simplejson.dumps({'email': email,
+                                         'realname': realname,
+                                         'comment': comment})
+        response = requests.put(path,
+                                cookies={'beegosessionID': self.session_id},
+                                data=request_body)
         if response.status_code == 200:
             result = True
-            print("Successfully update user profile with user id: {}".format(user_id))
+            print("Successfully update user profile with user id: {}".format(
+                user_id))
         else:
-            print("Fail to update user profile with user id: {}, response code: {}".format(user_id, response.status_code))
+            print(
+                "Fail to update user profile with user id: {}, response code: {}".format(
+                    user_id, response.status_code))
         return result
 
     # DELETE /users/{user_id}
@@ -198,14 +228,17 @@ class HarborClient(object):
     # PUT /users/{user_id}/password
     def change_password(self, user_id, old_password, new_password):
         result = False
-        path = '%s://%s/api/users/%s/password?user_id=%s' % (self.protocol, self.host,
-                                                    user_id, user_id)
-        request_body = simplejson.dumps({'old_password': old_password, 'new_password': new_password})
-        response = requests.put(
-            path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        path = '%s://%s/api/users/%s/password?user_id=%s' % (
+            self.protocol, self.host, user_id, user_id)
+        request_body = simplejson.dumps({'old_password': old_password,
+                                         'new_password': new_password})
+        response = requests.put(path,
+                                cookies={'beegosessionID': self.session_id},
+                                data=request_body)
         if response.status_code == 200:
             result = True
-            print("Successfully change password for user id: {}".format(user_id))
+            print("Successfully change password for user id: {}".format(
+                user_id))
         else:
             print("Fail to change password for user id: {}".format(user_id))
         return result
@@ -248,8 +281,8 @@ class HarborClient(object):
     def delete_repository(self, repo_name, tag=None):
         # TODO: support to check tag
         result = False
-        path = '%s://%s/api/repositories?repo_name=%s' % (self.protocol, self.host,
-                                                    repo_name)
+        path = '%s://%s/api/repositories?repo_name=%s' % (self.protocol,
+                                                          self.host, repo_name)
         response = requests.delete(
             path, cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
@@ -313,22 +346,13 @@ class HarborClient(object):
     # GET /logs
     def get_logs(self, lines=None, start_time=None, end_time=None):
         result = None
-        path = '%s://%s/api/logs' % (
-            self.protocol, self.host)
+        path = '%s://%s/api/logs' % (self.protocol, self.host)
         response = requests.get(path,
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print(
-                "Successfully get logs")
+            print("Successfully get logs")
         else:
-            print("Fail to get logs and response code: {}".format(response.status_code))
+            print("Fail to get logs and response code: {}".format(
+                response.status_code))
         return result
- 
-
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
