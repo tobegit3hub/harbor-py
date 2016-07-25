@@ -12,5 +12,5 @@ password = "Harbor12345"
 client = harborclient.HarborClient(host, user, password)
 
 # Delete repository
-repo_name = "library"
+repo_name = "library/cirros"
 client.delete_repository(repo_name)

@@ -12,7 +12,7 @@ password = "Harbor12345"
 client = harborclient.HarborClient(host, user, password)
 
 # Update user profile
-user_id = 5
+user_id = 2
 email = "new@gmail.com"
 realname = "new_realname"
 comment = "new_comment"

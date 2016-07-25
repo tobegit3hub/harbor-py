@@ -12,5 +12,5 @@ password = "Harbor12345"
 client = harborclient.HarborClient(host, user, password)
 
 # Get all repositories
-project_id = 5
+project_id = 1
 print(client.get_repositories(project_id))

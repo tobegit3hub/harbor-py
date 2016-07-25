@@ -13,6 +13,3 @@ client = harborclient.HarborClient(host, user, password)
 
 # Get all users
 print(client.get_users())
-
-# Get user with user_name
-# TODO

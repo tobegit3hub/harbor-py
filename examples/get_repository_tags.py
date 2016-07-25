@@ -12,5 +12,5 @@ password = "Harbor12345"
 client = harborclient.HarborClient(host, user, password)
 
 # Get repository tags
-repo_name = "test-repo"
+repo_name = "library/cirros"
 client.get_repository_tags(repo_name)

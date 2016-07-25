@@ -17,10 +17,10 @@ class HarborClient(object):
         self.logout()
 
     def login(self):
-        login_data = requests.post(
-            '%s://%s/login' % (self.protocol, self.host),
-            data={'principal': self.user,
-                  'password': self.password})
+        login_data = requests.post('%s://%s/login' %
+                                   (self.protocol, self.host),
+                                   data={'principal': self.user,
+                                         'password': self.password})
         if login_data.status_code == 200:
             session_id = login_data.cookies.get('beegosessionID')
 
@@ -80,14 +80,17 @@ class HarborClient(object):
 
     # HEAD /projects
     def check_project_exist(self, project_name):
-        # TODO: need test
-        result = None
+        result = False
         path = '%s://%s/api/projects?project_name=%s' % (
             self.protocol, self.host, project_name)
-        response = requests.head(
-            path, cookies={'beegosessionID': self.session_id})
+        response = requests.head(path,
+                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
-            result = response.json()
+            result = True
+            print("Successfully check project exist, result: {}".format(
+                result))
+        elif response.status_code == 404:
+            result = False
             print("Successfully check project exist, result: {}".format(
                 result))
         else:
@@ -100,10 +103,9 @@ class HarborClient(object):
         path = '%s://%s/api/projects' % (self.protocol, self.host)
         request_body = simplejson.dumps({'project_name': project_name,
                                          'public': is_public})
-        response = requests.post(
-            path,
-            cookies={'beegosessionID': self.session_id},
-            data=request_body)
+        response = requests.post(path,
+                                 cookies={'beegosessionID': self.session_id},
+                                 data=request_body)
         if response.status_code == 201 or response.status_code == 500:
             # TODO: the response return 500 sometimes
             result = True
@@ -133,11 +135,6 @@ class HarborClient(object):
                 "Fail to set publicity to project id: {} with status code: {}".format(
                     project_id, response.status_code))
         return result
-
-    # TODO: implement these APIs
-    # POST /projects/{project_id}/logs/filter
-    # GET /projects/{project_id}/members/
-    # GET /projects/{project_id}/members/{user_id}
 
     # GET /statistics
     def get_statistics(self):
@@ -175,10 +172,9 @@ class HarborClient(object):
                                          'password': password,
                                          'realname': realname,
                                          'comment': comment})
-        response = requests.post(
-            path,
-            cookies={'beegosessionID': self.session_id},
-            data=request_body)
+        response = requests.post(path,
+                                 cookies={'beegosessionID': self.session_id},
+                                 data=request_body)
         if response.status_code == 201:
             result = True
             print("Successfully create user with username: {}".format(
@@ -216,8 +212,8 @@ class HarborClient(object):
         result = False
         path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host,
                                                     user_id, user_id)
-        response = requests.delete(
-            path, cookies={'beegosessionID': self.session_id})
+        response = requests.delete(path,
+                                   cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
             print("Successfully delete user with id: {}".format(user_id))
@@ -245,7 +241,7 @@ class HarborClient(object):
 
     # PUT /users/{user_id}/sysadmin
     def promote_as_admin(self, user_id):
-        # TODO: need test
+        # TODO: always return 404, need more test
         result = False
         path = '%s://%s/api/users/%s/sysadmin?user_id=%s' % (
             self.protocol, self.host, user_id, user_id)
@@ -253,10 +249,12 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
-            print("Successfully promote user as admin with id: {}".format(
+            print("Successfully promote user as admin with user id: {}".format(
                 user_id))
         else:
-            print("Fail to promote user as admin with id: {}".format(user_id))
+            print(
+                "Fail to promote user as admin with user id: {}, response code: {}".format(
+                    user_id, response.status_code))
         return result
 
     # GET /repositories
@@ -280,11 +278,12 @@ class HarborClient(object):
     # DELETE /repositories
     def delete_repository(self, repo_name, tag=None):
         # TODO: support to check tag
+        # TODO: return 200 but the repo is not deleted, need more test
         result = False
         path = '%s://%s/api/repositories?repo_name=%s' % (self.protocol,
                                                           self.host, repo_name)
-        response = requests.delete(
-            path, cookies={'beegosessionID': self.session_id})
+        response = requests.delete(path,
+                                   cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
             print("Successfully delete repository: {}".format(repo_name))
@@ -294,7 +293,6 @@ class HarborClient(object):
 
     # Get /repositories/tags
     def get_repository_tags(self, repo_name):
-        # TODO: need test
         result = None
         path = '%s://%s/api/repositories/tags?repo_name=%s' % (
             self.protocol, self.host, repo_name)
@@ -310,7 +308,6 @@ class HarborClient(object):
 
     # GET /repositories/manifests
     def get_repository_manifests(self, repo_name, tag):
-        # TODO: need test
         result = None
         path = '%s://%s/api/repositories/manifests?repo_name=%s&tag=%s' % (
             self.protocol, self.host, repo_name, tag)

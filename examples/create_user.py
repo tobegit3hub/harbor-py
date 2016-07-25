@@ -12,8 +12,8 @@ password = "Harbor12345"
 client = harborclient.HarborClient(host, user, password)
 
 # Create user
-username = "test-username3"
-email = "test-email3@gmail.com"
+username = "test-username"
+email = "test-email@gmail.com"
 password = "test-password"
 realname = "test-realname"
 comment = "test-comment"
