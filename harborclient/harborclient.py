@@ -2,6 +2,9 @@
 
 import requests
 import simplejson
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 
 class HarborClient(object):
@@ -24,16 +27,17 @@ class HarborClient(object):
         if login_data.status_code == 200:
             session_id = login_data.cookies.get('beegosessionID')
 
-            print("Successfully login, session id: {}".format(session_id))
+            logging.debug("Successfully login, session id: {}".format(
+                session_id))
             return session_id
         else:
-            print("Fail to login, please try again")
+            logging.error("Fail to login, please try again")
             return None
 
     def logout(self):
         requests.get('%s://%s/logout' % (self.protocol, self.host),
                      cookies={'beegosessionID': self.session_id})
-        print("Successfully logout")
+        logging.debug("Successfully logout")
 
     # Get project id
     def get_project_id_from_name(self, project_name):
@@ -43,8 +47,9 @@ class HarborClient(object):
             cookies={'beegosessionID': self.session_id})
         if registry_data.status_code == 200 and registry_data.json():
             project_id = registry_data.json()[0]['project_id']
-            print("Successfully get project id: {}, project name: {}".format(
-                project_id, project_name))
+            logging.debug(
+                "Successfully get project id: {}, project name: {}".format(
+                    project_id, project_name))
             return project_id
         else:
             pritn("Fail to get project id from project name", project_name)
@@ -59,9 +64,9 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get search result: {}".format(result))
+            logging.debug("Successfully get search result: {}".format(result))
         else:
-            print("Fail to get search result")
+            logging.error("Fail to get search result")
         return result
 
     # GET /projects
@@ -73,9 +78,10 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get projects result: {}".format(result))
+            logging.debug("Successfully get projects result: {}".format(
+                result))
         else:
-            print("Fail to get projects result")
+            logging.error("Fail to get projects result")
         return result
 
     # HEAD /projects
@@ -87,14 +93,14 @@ class HarborClient(object):
                                  cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
-            print("Successfully check project exist, result: {}".format(
-                result))
+            logging.debug(
+                "Successfully check project exist, result: {}".format(result))
         elif response.status_code == 404:
             result = False
-            print("Successfully check project exist, result: {}".format(
-                result))
+            logging.debug(
+                "Successfully check project exist, result: {}".format(result))
         else:
-            print("Fail to check project exist")
+            logging.error("Fail to check project exist")
         return result
 
     # POST /projects
@@ -109,10 +115,11 @@ class HarborClient(object):
         if response.status_code == 201 or response.status_code == 500:
             # TODO: the response return 500 sometimes
             result = True
-            print("Successfully create project with project name: {}".format(
-                project_name))
+            logging.debug(
+                "Successfully create project with project name: {}".format(
+                    project_name))
         else:
-            print(
+            logging.error(
                 "Fail to create project with project name: {}, response code: {}".format(
                     project_name, response.status_code))
         return result
@@ -128,10 +135,11 @@ class HarborClient(object):
                                 data=request_body)
         if response.status_code == 200:
             result = True
-            print("Success to set project id: {} with publicity: {}".format(
-                project_id, is_public))
+            logging.debug(
+                "Success to set project id: {} with publicity: {}".format(
+                    project_id, is_public))
         else:
-            print(
+            logging.error(
                 "Fail to set publicity to project id: {} with status code: {}".format(
                     project_id, response.status_code))
         return result
@@ -144,9 +152,9 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get statistics: {}".format(result))
+            logging.debug("Successfully get statistics: {}".format(result))
         else:
-            print("Fail to get statistics result")
+            logging.error("Fail to get statistics result")
         return result
 
     # GET /users
@@ -158,9 +166,9 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get users result: {}".format(result))
+            logging.debug("Successfully get users result: {}".format(result))
         else:
-            print("Fail to get users result")
+            logging.error("Fail to get users result")
         return result
 
     # POST /users
@@ -177,10 +185,10 @@ class HarborClient(object):
                                  data=request_body)
         if response.status_code == 201:
             result = True
-            print("Successfully create user with username: {}".format(
+            logging.debug("Successfully create user with username: {}".format(
                 username))
         else:
-            print(
+            logging.error(
                 "Fail to create user with username: {}, response code: {}".format(
                     username, response.status_code))
         return result
@@ -199,10 +207,11 @@ class HarborClient(object):
                                 data=request_body)
         if response.status_code == 200:
             result = True
-            print("Successfully update user profile with user id: {}".format(
-                user_id))
+            logging.debug(
+                "Successfully update user profile with user id: {}".format(
+                    user_id))
         else:
-            print(
+            logging.error(
                 "Fail to update user profile with user id: {}, response code: {}".format(
                     user_id, response.status_code))
         return result
@@ -216,9 +225,10 @@ class HarborClient(object):
                                    cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
-            print("Successfully delete user with id: {}".format(user_id))
+            logging.debug("Successfully delete user with id: {}".format(
+                user_id))
         else:
-            print("Fail to delete user with id: {}".format(user_id))
+            logging.error("Fail to delete user with id: {}".format(user_id))
         return result
 
     # PUT /users/{user_id}/password
@@ -233,10 +243,11 @@ class HarborClient(object):
                                 data=request_body)
         if response.status_code == 200:
             result = True
-            print("Successfully change password for user id: {}".format(
-                user_id))
+            logging.debug(
+                "Successfully change password for user id: {}".format(user_id))
         else:
-            print("Fail to change password for user id: {}".format(user_id))
+            logging.error("Fail to change password for user id: {}".format(
+                user_id))
         return result
 
     # PUT /users/{user_id}/sysadmin
@@ -249,10 +260,11 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
-            print("Successfully promote user as admin with user id: {}".format(
-                user_id))
+            logging.debug(
+                "Successfully promote user as admin with user id: {}".format(
+                    user_id))
         else:
-            print(
+            logging.error(
                 "Fail to promote user as admin with user id: {}, response code: {}".format(
                     user_id, response.status_code))
         return result
@@ -267,11 +279,11 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print(
+            logging.debug(
                 "Successfully get repositories with id: {}, result: {}".format(
                     project_id, result))
         else:
-            print("Fail to get repositories result with id: {}".format(
+            logging.error("Fail to get repositories result with id: {}".format(
                 project_id))
         return result
 
@@ -286,9 +298,10 @@ class HarborClient(object):
                                    cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = True
-            print("Successfully delete repository: {}".format(repo_name))
+            logging.debug("Successfully delete repository: {}".format(
+                repo_name))
         else:
-            print("Fail to delete repository: {}".format(repo_name))
+            logging.error("Fail to delete repository: {}".format(repo_name))
         return result
 
     # Get /repositories/tags
@@ -300,10 +313,12 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get tag with repo name: {}, result: {}".format(
-                repo_name, result))
+            logging.debug(
+                "Successfully get tag with repo name: {}, result: {}".format(
+                    repo_name, result))
         else:
-            print("Fail to get tags with repo name: {}".format(repo_name))
+            logging.error("Fail to get tags with repo name: {}".format(
+                repo_name))
         return result
 
     # GET /repositories/manifests
@@ -315,12 +330,13 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print(
+            logging.debug(
                 "Successfully get manifests with repo name: {}, tag: {}, result: {}".format(
                     repo_name, tag, result))
         else:
-            print("Fail to get manifests with repo name: {}, tag: {}".format(
-                repo_name, tag))
+            logging.error(
+                "Fail to get manifests with repo name: {}, tag: {}".format(
+                    repo_name, tag))
         return result
 
     # GET /repositories/top
@@ -333,11 +349,11 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print(
+            logging.debug(
                 "Successfully get top accessed repositories, result: {}".format(
                     result))
         else:
-            print("Fail to get top accessed repositories")
+            logging.error("Fail to get top accessed repositories")
         return result
 
     # GET /logs
@@ -348,8 +364,8 @@ class HarborClient(object):
                                 cookies={'beegosessionID': self.session_id})
         if response.status_code == 200:
             result = response.json()
-            print("Successfully get logs")
+            logging.debug("Successfully get logs")
         else:
-            print("Fail to get logs and response code: {}".format(
+            logging.error("Fail to get logs and response code: {}".format(
                 response.status_code))
         return result
