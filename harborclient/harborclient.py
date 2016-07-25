@@ -223,3 +223,22 @@ class HarborClient(object):
         else:
             print("Fail to get repositories result with id: {}".format(project_id))
         return result
+
+    # DELETE /repositories
+
+    # Get /repositories/tags
+    def get_repository_tags(self, repo_name):
+        # TODO: need test
+        result = None
+        path = '%s://%s/api/repositories/tags?repo_name=%s' % (self.protocol, self.host, repo_name)
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = response.json()
+            print("Successfully get tag with repo name: {}, result: {}".format(repo_name, result))
+        else:
+            print("Fail to get tags with repo name: {}".format(repo_name))
+        return result
+
+    # GET /repositories/manifests
+

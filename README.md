@@ -17,6 +17,8 @@
 - [ ] Repositories APIs
   - [x] [Get repositories](./examples/get_repositories.py)
   - [ ] Create repository
+  - [ ] Delete repository
+  - [x] [Get repository tags](./examples/get_repository_tags.py)
 - [ ] Others APIs
   - [x] [Search](./examples/search.py)
   - [x] [Get statistics](./examples/get_statistics.py)
