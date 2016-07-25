@@ -15,6 +15,7 @@
   - [ ] Change password
   - [x] [Promote as admin](./examples/promote_as_admin.py)
 - [ ] Repositories APIs
+  - [x] [Get repositories](./examples/get_repositories.py)
   - [ ] Create repository
 - [ ] Others APIs
   - [x] [Search](./examples/search.py)

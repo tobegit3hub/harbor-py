@@ -210,3 +210,16 @@ class HarborClient(object):
         return result
 
 
+    # GET /repositories
+    def get_repositories(self, project_id, query_string=None):
+        # TODO: support parameter
+        result = None
+        path = '%s://%s/api/repositories?project_id=%s' % (self.protocol, self.host, project_id)
+        response = requests.get(path,
+                                cookies={'beegosessionID': self.session_id})
+        if response.status_code == 200:
+            result = response.json()
+            print("Successfully get repositories with id: {}, result: {}".format(project_id, result))
+        else:
+            print("Fail to get repositories result with id: {}".format(project_id))
+        return result
