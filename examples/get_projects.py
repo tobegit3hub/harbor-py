@@ -15,7 +15,7 @@ client = harborclient.HarborClient(host, user, password)
 print(client.get_projects())
 
 # Get projects with project_name
-print("TODO")
+# TODO
 
 # Get project iwth is_public
-print("TODO")
+# TODO

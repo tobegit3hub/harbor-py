@@ -10,3 +10,7 @@ user = "admin"
 password = "Harbor12345"
 
 client = harborclient.HarborClient(host, user, password)
+
+# Delete repository
+repo_name = "library"
+client.delete_repository(repo_name)

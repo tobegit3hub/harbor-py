@@ -12,8 +12,6 @@ password = "Harbor12345"
 client = harborclient.HarborClient(host, user, password)
 
 # Create project
-
 project_name = "test_project"
 is_public = True
-
 client.create_project(project_name, is_public)

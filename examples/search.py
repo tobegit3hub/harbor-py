@@ -10,4 +10,7 @@ user = "admin"
 password = "Harbor12345"
 
 client = harborclient.HarborClient(host, user, password)
-print(client.search("library"))
+
+# Search with query string
+query_string = "library"
+print(client.search(query_string))

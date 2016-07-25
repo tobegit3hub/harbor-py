@@ -10,4 +10,7 @@ user = "admin"
 password = "Harbor12345"
 
 client = harborclient.HarborClient(host, user, password)
-print(client.check_project_exist("test-project"))
+
+# Check if project exists
+project_name = "test-project"
+print(client.check_project_exist(project_name))

@@ -12,11 +12,9 @@ password = "Harbor12345"
 client = harborclient.HarborClient(host, user, password)
 
 # Create user
-
 username = "test-username3"
 email = "test-email3@gmail.com"
 password = "test-password"
 realname = "test-realname"
 comment = "test-comment"
-
 client.create_user(username, email, password, realname, comment)

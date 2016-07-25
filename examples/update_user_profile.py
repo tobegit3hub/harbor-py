@@ -16,5 +16,4 @@ user_id = 5
 email = "new@gmail.com"
 realname = "new_realname"
 comment = "new_comment"
-
 client.update_user_profile(user_id, email, realname, comment)
