@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
-import requests
-import simplejson
+# for inner
+import json
 import logging
+# for thirdparty
+import requests
 
 logging.basicConfig(level=logging.INFO)
 
 
 class HarborClient(object):
+
     def __init__(self, host, user, password, protocol="http"):
         self.host = host
         self.user = user
@@ -52,7 +55,7 @@ class HarborClient(object):
                     project_id, project_name))
             return project_id
         else:
-            pritn("Fail to get project id from project name", project_name)
+            print("Fail to get project id from project name", project_name)
             return None
 
     # GET /search
@@ -107,8 +110,8 @@ class HarborClient(object):
     def create_project(self, project_name, is_public=False):
         result = False
         path = '%s://%s/api/projects' % (self.protocol, self.host)
-        request_body = simplejson.dumps({'project_name': project_name,
-                                         'public': is_public})
+        request_body = json.dumps({'project_name': project_name,
+                                   'public': is_public})
         response = requests.post(path,
                                  cookies={'beegosessionID': self.session_id},
                                  data=request_body)
@@ -129,7 +132,7 @@ class HarborClient(object):
         result = False
         path = '%s://%s/api/projects/%s/publicity?project_id=%s' % (
             self.protocol, self.host, project_id, project_id)
-        request_body = simplejson.dumps({'public': is_public})
+        request_body = json.dumps({'public': is_public})
         response = requests.put(path,
                                 cookies={'beegosessionID': self.session_id},
                                 data=request_body)
@@ -175,11 +178,11 @@ class HarborClient(object):
     def create_user(self, username, email, password, realname, comment):
         result = False
         path = '%s://%s/api/users' % (self.protocol, self.host)
-        request_body = simplejson.dumps({'username': username,
-                                         'email': email,
-                                         'password': password,
-                                         'realname': realname,
-                                         'comment': comment})
+        request_body = json.dumps({'username': username,
+                                   'email': email,
+                                   'password': password,
+                                   'realname': realname,
+                                   'comment': comment})
         response = requests.post(path,
                                  cookies={'beegosessionID': self.session_id},
                                  data=request_body)
@@ -199,9 +202,9 @@ class HarborClient(object):
         result = False
         path = '%s://%s/api/users/%s?user_id=%s' % (self.protocol, self.host,
                                                     user_id, user_id)
-        request_body = simplejson.dumps({'email': email,
-                                         'realname': realname,
-                                         'comment': comment})
+        request_body = json.dumps({'email': email,
+                                   'realname': realname,
+                                   'comment': comment})
         response = requests.put(path,
                                 cookies={'beegosessionID': self.session_id},
                                 data=request_body)
@@ -236,8 +239,8 @@ class HarborClient(object):
         result = False
         path = '%s://%s/api/users/%s/password?user_id=%s' % (
             self.protocol, self.host, user_id, user_id)
-        request_body = simplejson.dumps({'old_password': old_password,
-                                         'new_password': new_password})
+        request_body = json.dumps({'old_password': old_password,
+                                   'new_password': new_password})
         response = requests.put(path,
                                 cookies={'beegosessionID': self.session_id},
                                 data=request_body)
