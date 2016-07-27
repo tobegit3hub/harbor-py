@@ -1,16 +1,13 @@
 #!/usr/bin/env python
 
-# for inner
 import json
 import logging
-# for thirdparty
 import requests
 
 logging.basicConfig(level=logging.INFO)
 
 
 class HarborClient(object):
-
     def __init__(self, host, user, password, protocol="http"):
         self.host = host
         self.user = user
@@ -55,7 +52,8 @@ class HarborClient(object):
                     project_id, project_name))
             return project_id
         else:
-            print("Fail to get project id from project name", project_name)
+            logging.error("Fail to get project id from project name",
+                          project_name)
             return None
 
     # GET /search
