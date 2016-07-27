@@ -1,3 +1,5 @@
+# Deprecated! This project has been moved to [harbor](https://github.com/vmware/harbor/tree/master/contrib/sdk/harbor-py).
+
 ## Introduction
 
 [harbor](https://github.com/vmware/harbor) is the enterprise-class registry server for docker distribution.
