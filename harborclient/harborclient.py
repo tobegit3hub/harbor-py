@@ -8,11 +8,12 @@ logging.basicConfig(level=logging.INFO)
 
 
 class HarborClient(object):
-    def __init__(self, host, user, password, protocol="http"):
+    def __init__(self, host, user, password, protocol="http", verify_ssl_cert=True):
         self.host = host
         self.user = user
         self.password = password
         self.protocol = protocol
+        self.verify_ssl_cert = verify_ssl_cert
 
         self.session_id = self.login()
 
@@ -20,10 +21,10 @@ class HarborClient(object):
         self.logout()
 
     def login(self):
-        login_data = requests.post('%s://%s/login' %
-                                   (self.protocol, self.host),
-                                   data={'principal': self.user,
-                                         'password': self.password})
+        data = {'principal': self.user,
+                'password': self.password}
+        url = '%s://%s/login' % (self.protocol, self.host)
+        login_data = requests.post(url=url, data=data, verify=self.verify_ssl_cert)
         if login_data.status_code == 200:
             session_id = login_data.cookies.get('beegosessionID')
 
