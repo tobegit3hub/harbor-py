@@ -23,8 +23,8 @@ class HarborClient(object):
         self.logout()
 
     def login(self):
-        data = {'principal': self.user, 'password': self.password}
         login_url = '%s/login' % self.based_url
+        data = {'principal': self.user, 'password': self.password}
         login_data = requests.post(url=login_url, data=data, verify=self.verify_ssl_cert)
 
         if login_data.status_code == 200:
@@ -74,12 +74,11 @@ class HarborClient(object):
         return result
 
     # GET /projects
-    def get_projects(self, project_name=None, is_public=None):
-        # TODO: support parameter
+    def get_projects(self, is_public=True):
         result = None
-        path = '%s://%s/api/projects' % (self.protocol, self.host)
-        response = requests.get(path,
-                                cookies={'beegosessionID': self.session_id})
+        projects_path = '%s/api/projects' % self.based_url
+        path = '%s?is_public=%d' % (projects_path, 1 if is_public else 0)
+        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug("Successfully get projects result: {}".format(
@@ -87,6 +86,15 @@ class HarborClient(object):
         else:
             logging.error("Fail to get projects result")
         return result
+
+    def get_project_by_name(self, project_name, is_public=True):
+        projects = self.get_projects(is_public=is_public)
+        for project in projects:
+            if project.get('name') == project_name:
+                return project
+
+        logging.debug('There is no project with name %s' % project_name)
+        return None
 
     # HEAD /projects
     def check_project_exist(self, project_name):
@@ -374,7 +382,10 @@ class HarborClient(object):
                 response.status_code))
         return result
 
+
+# TODO: remove it
 """
+this part only for testing
 ./harborclient.py --user admin --host harbor.lss.emc.com --passwd VERY_SECRET_PASSWORD
 """
 if __name__ == '__main__':
@@ -392,4 +403,3 @@ if __name__ == '__main__':
                           protocol='https',
                           verify_ssl_cert=False)
 
-    logging.info(client.session_id)
