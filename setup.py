@@ -8,7 +8,7 @@ from codecs import open
 from os import path
 
 setup(
-    name='harbor-py',
+    name='harbor-py-light',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see

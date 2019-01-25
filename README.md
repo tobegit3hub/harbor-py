@@ -1,17 +1,17 @@
-# Deprecated! This project has been moved to [harbor](https://github.com/vmware/harbor/tree/master/contrib/sdk/harbor-py).
+# [Harbor](https://github.com/goharbor/harbor) client light.
 
 ## Introduction
 
-[harbor](https://github.com/vmware/harbor) is the enterprise-class registry server for docker distribution.
+[Harbor](https://github.com/goharbor/harbor) is the enterprise-class registry server for docker distribution.
 
-[harbor-py](https://github.com/tobegit3hub/harbor-py) is the native and compatible python SDK for harbor. The supported APIs are list below.
+[harbor-py-light](https://github.com/fedor-chemashkin/harbor-py-light) is lightweight Harbor client. The supported APIs are list below.
 
 - [x] Projects APIs
   - [x] [Get projects](./examples/get_projects.py)
   - [x] [Create project](./examples/create_project.py)
   - [x] [Check project exist](./examples/check_project_exist.py)
-  - [x] [Set project publicity](./examples/set_project_publicity.py)
   - [x] [Get project id from name](./examples/get_project_id_from_name.py)
+  - [ ] [Set project publicity](./examples/set_project_publicity.py)
   - [ ] Get project access logs
   - [ ] Get project member
   - [ ] Get project and user member

@@ -13,4 +13,4 @@ client = harborclient.HarborClient(host, user, password)
 
 # Get project id from name
 project_name = "library"
-print(client.get_project_id_from_name(project_name))
+print(client.get_project_id_by_name(project_name))

@@ -42,17 +42,21 @@ class HarborClient(object):
         requests.get(url=logout_url, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
         logging.debug("Successfully logout")
 
-    # Get project id
-    def get_project_id_from_name(self, project_name):
-        registry_data = requests.get(
-            '%s://%s/api/projects?project_name=%s' %
-            (self.protocol, self.host, project_name),
-            cookies={'beegosessionID': self.session_id})
+    def get_project_id_by_name(self, project_name):
+        """
+        GET /api/projects?project_name={}
+        Get project id by its name
+        :param project_name: Name of project
+        :return:
+        """
+        path = '{}://{}/api/projects?project_name={}'.format(self.protocol, self.host, project_name)
+        registry_data = requests.get(path, cookies={'beegosessionID': self.session_id},
+                                     verify=self.verify_ssl_cert)
+
         if registry_data.status_code == 200 and registry_data.json():
             project_id = registry_data.json()[0]['project_id']
-            logging.debug(
-                "Successfully get project id: {}, project name: {}".format(
-                    project_id, project_name))
+            logging.debug('Successfully get project id: {}, project name: {}'.format(project_id,
+                                                                                     project_name))
             return project_id
         else:
             logging.error("Fail to get project id from project name",
@@ -93,68 +97,118 @@ class HarborClient(object):
             if project.get('name') == project_name:
                 return project
 
-        logging.debug('There is no project with name %s' % project_name)
+        logging.debug('There is no project with name {}'.format(project_name))
         return None
 
-    # HEAD /projects
-    def check_project_exist(self, project_name):
+    def check_project_exists(self, project_name):
+        """
+        HEAD /projects
+        Check if the project name user provided already exists.
+        :param project_name: Project name for checking exists.
+        :return: True if project exists
+        """
         result = False
-        path = '%s://%s/api/projects?project_name=%s' % (
-            self.protocol, self.host, project_name)
-        response = requests.head(path,
-                                 cookies={'beegosessionID': self.session_id})
+        path = '{}://{}/api/projects?project_name={}'.format(self.protocol, self.host, project_name)
+        response = requests.head(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = True
-            logging.debug(
-                "Successfully check project exist, result: {}".format(result))
+            logging.debug('Successfully check project existence, result: {}'.format(result))
+        elif response.status_code == 401:
+            result = False
+            logging.info('Need to be logged in.')
         elif response.status_code == 404:
             result = False
-            logging.debug(
-                "Successfully check project exist, result: {}".format(result))
+            logging.debug('Successfully check project exist, result: {}'.format(result))
         else:
-            logging.error("Fail to check project exist")
+            logging.error('Fail to check project existence')
         return result
 
-    # POST /projects
     def create_project(self, project_name, is_public=False):
+        """
+        POST /projects
+        Create a new project
+        :param project_name: New created project
+        :param is_public: Create public project
+        :return: True if created
+        """
         result = False
-        path = '%s://%s/api/projects' % (self.protocol, self.host)
+        path = '{}://{}/api/projects'.format(self.protocol, self.host)
+        # TODO: make metadata parameters configurable
         request_body = json.dumps({'project_name': project_name,
-                                   'public': is_public})
-        response = requests.post(path,
-                                 cookies={'beegosessionID': self.session_id},
-                                 data=request_body)
-        if response.status_code == 201 or response.status_code == 500:
-            # TODO: the response return 500 sometimes
+                                   'metadata': {
+                                       'public': str(is_public).lower(),
+                                       'enable_content_trust': 'true',
+                                       'prevent_vul': 'true',
+                                       'severity': 'critical',
+                                       'auto_scan': 'true'}
+                                   })
+
+        print(request_body)
+
+        response = requests.post(path, cookies={'beegosessionID': self.session_id},
+                                 data=request_body, verify=self.verify_ssl_cert)
+
+        if response.status_code == 201:
             result = True
-            logging.debug(
-                "Successfully create project with project name: {}".format(
-                    project_name))
+            logging.debug('Successfully create project with project name: {}'.format(project_name))
+        elif response.status_code == 400:
+            result = False
+            logging.info('Unsatisfied with constraints of the project creation.')
+        elif response.status_code == 401:
+            result = False
+            logging.info('Need to be logged in.')
+        elif response.status_code == 409:
+            result = False
+            logging.info('Project name already exists.')
+        elif response.status_code == 415:
+            result = False
+            logging.error('Incorrect request data format.')
         else:
-            logging.error(
-                "Fail to create project with project name: {}, response code: {}".format(
+            logging.error('Failed to create project with project name: {}, response code: {}.'.format(
                     project_name, response.status_code))
         return result
 
-    # PUT /projects/{project_id}/publicity
-    def set_project_publicity(self, project_id, is_public):
-        result = False
-        path = '%s://%s/api/projects/%s/publicity?project_id=%s' % (
-            self.protocol, self.host, project_id, project_id)
-        request_body = json.dumps({'public': is_public})
-        response = requests.put(path,
-                                cookies={'beegosessionID': self.session_id},
-                                data=request_body)
+    def get_project_detailed_info(self, project_id):
+        """
+        GET /projects/project_id
+        This endpoint returns specific project information by project ID.
+        :param project_id: Project ID for filtering results.
+        :return: info about project
+        """
+        path = '{}://{}/api/projects/{}'.format(self.protocol, self.host, project_id)
+        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
-            result = True
-            logging.debug(
-                "Success to set project id: {} with publicity: {}".format(
-                    project_id, is_public))
+            result = response.json()
+            logging.debug('Successfully get projects result: {}'.format(result))
+            return result
+        elif response.status_code == 401:
+            logging.info('Need to be logged in.')
         else:
-            logging.error(
-                "Fail to set publicity to project id: {} with status code: {}".format(
-                    project_id, response.status_code))
-        return result
+            logging.error('Failed to get project detailed info')
+
+    def delete_project(self, project_id):
+        """
+        DELETE /projects/project_id
+        This endpoint returns specific project information by project ID.
+        :param project_id: Project ID for filtering results.
+        :return: True if project is deleted
+        """
+        path = '{}://{}/api/projects/{}'.format(self.protocol, self.host, project_id)
+        response = requests.delete(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        if response.status_code == 200:
+            logging.info('Project is deleted successfully.')
+            return True
+        if response.status_code == 400:
+            logging.error('Project is deleted successfully.')
+        elif response.status_code == 401:
+            logging.info('Need to be logged in.')
+        elif response.status_code == 404:
+            logging.info('Project does not exist.')
+        elif response.status_code == 412:
+            logging.info('Project contains policies, can not be deleted.')
+        else:
+            logging.error('Failed to delete project')
+        return False
 
     # GET /statistics
     def get_statistics(self):
@@ -403,3 +457,4 @@ if __name__ == '__main__':
                           protocol='https',
                           verify_ssl_cert=False)
 
+    client.create_project('asd', True)
