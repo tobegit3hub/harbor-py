@@ -324,8 +324,12 @@ class HarborClient(object):
             logging.error("Fail to get repositories result with id: {}".format(project_id))
         return result
 
-    # DELETE /repositories/{repo_name}
-    def delete_repository(self, repo_name, tag=None):
+    def delete_repository(self, repo_name):
+        """
+        DELETE /repositories/{repo_name}
+        :param repo_name: in format "project_name/image_name"
+        :return: True if operation finished successfully
+        """
         result = False
         endpoint = 'api/repositories/{}'.format(repo_name)
         path = '{}/{}'.format(self.based_url, endpoint)
@@ -334,30 +338,17 @@ class HarborClient(object):
             result = True
             logging.debug('Successfully delete repository: {}'.format(repo_name))
         else:
-            logging.error('Failed to delete repository: {}'.format(repo_name))
+            logging.error('Failed to delete repository: {}, code {}'.format(repo_name, response.status_code))
         return result
 
-    # GET /repositories/{repo_name}/tags/{tag}
-    def check_repository_tag_exist(self, repo_name, tag):
-        result = None
-        endpoint = 'api/repositories/{}/tags/{}'.format(repo_name, tag)
-        path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
-        if response.status_code == 200:
-            result = True
-            logging.debug('Successfully check tag {}:{} existence, result: {}'.format(repo_name, tag, result))
-        elif response.status_code == 401:
-            result = False
-            logging.info('Need to be logged in.')
-        elif response.status_code == 404:
-            result = False
-            logging.debug('Successfully check project exist, result: {}'.format(result))
-        else:
-            logging.error('Fail to check project existence')
-        return result
-
-    # DELETE /repositories/{repo_name}/tags/{tag}
     def delete_repository_tag(self, repo_name, tag):
+        """
+        DELETE /repositories/{repo_name}/tags/{tag}
+        delete some tag of the repository(image)
+        :param repo_name: in format "project_name/image_name'
+        :param tag:
+        :return: True if operation finished successfully
+        """
         result = False
         endpoint = 'api/repositories/{}/tags/{}'.format(repo_name, tag)
         path = '{}/{}'.format(self.based_url, endpoint)
@@ -366,11 +357,16 @@ class HarborClient(object):
             result = True
             logging.debug("Successfully delete tag {}:{}".format(repo_name, tag))
         else:
-            logging.error("Fail to delete tag {}:{}".format(repo_name, tag))
+            logging.error("Fail to delete tag {}:{}, code {}".format(repo_name, tag, response.status_code))
         return result
 
-    # GET /repositories/{repo_name}/tags
     def get_repository_tags(self, repo_name):
+        """
+        GET /repositories/{repo_name}/tags
+        get all tags for current repository
+        :param repo_name: in format "project_name/image_name"
+        :return:
+        """
         result = None
         endpoint = 'api/repositories/{}/tags'.format(repo_name)
         path = '{}/{}'.format(self.based_url, endpoint)
@@ -381,6 +377,28 @@ class HarborClient(object):
                 "Successfully get tags for {}, result: {}".format(repo_name, result))
         else:
             logging.error("Fail to get tags for repo: {}, code {}".format(repo_name, response.status_code))
+        return result
+
+    def check_repository_tag_exist(self, repo_name, tag):
+        """
+        GET /repositories/{repo_name}/tags/{tag}
+        check if repository with provided tag exist
+        :param repo_name: in format "project_name/image_name"
+        :param tag:
+        :return: True if operation finished successfully
+        """
+        result = False
+        endpoint = 'api/repositories/{}/tags/{}'.format(repo_name, tag)
+        path = '{}/{}'.format(self.based_url, endpoint)
+        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        if response.status_code == 200:
+            logging.debug('Repository {}:{} exist.'.format(repo_name, tag))
+            result = True
+        elif response.status_code == 404:
+            logging.debug('Repository {}:{} does not exist.'.format(repo_name, tag))
+            result = False
+        else:
+            logging.error('Fail to check project existence')
         return result
 
     # GET /repositories/manifests
