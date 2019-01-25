@@ -3,9 +3,8 @@
 import json
 import logging
 import requests
-import argparse
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.info)
 
 
 class HarborClient(object):
@@ -16,11 +15,14 @@ class HarborClient(object):
         self.protocol = protocol
         self.based_url = '{}://{}'.format(self.protocol, self.host)
         self.verify_ssl_cert = verify_ssl_cert
+        if self.verify_ssl_cert:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         self.session_id = self.login()
 
     def __del__(self):
-        self.logout()
+        self.logout(log=False)
 
     def login(self):
         login_url = '{}/login'.format(self.based_url)
@@ -36,10 +38,11 @@ class HarborClient(object):
             logging.error('Failed to login, please try again')
             return None
 
-    def logout(self):
+    def logout(self, log=True):
         logout_url = '{}/log_out'.format(self.based_url)
         requests.get(url=logout_url, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
-        logging.debug("Successfully logout")
+        if log:
+            logging.debug("Successfully logout")
 
     def get_project_id_by_name(self, project_name):
         """
@@ -155,6 +158,7 @@ class HarborClient(object):
         else:
             logging.error('Failed to create project with project name: {}, response code: {}.'.format(
                     project_name, response.status_code))
+        print(response)
         return result
 
     def get_project_detailed_info(self, project_id):
@@ -499,24 +503,4 @@ class HarborClient(object):
         else:
             logging.error('Failed to get configurations')
 
-
-# TODO: remove it
-"""
-this part only for testing
-./harborclient.py --user admin --host harbor.lss.emc.com --passwd VERY_SECRET_PASSWORD
-"""
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--host', '-a', dest='host', help='harbor address', required=True)
-    parser.add_argument('--user', '-u', dest='user', help='user name', required=True)
-    parser.add_argument('--passwd', '-p', dest='passwd', help='password', required=True)
-    parsed_args = parser.parse_args()
-
-    logging.info(parsed_args)
-
-    client = HarborClient(host=parsed_args.host,
-                          user=parsed_args.user,
-                          password=parsed_args.passwd,
-                          protocol='https',
-                          verify_ssl_cert=False)
 
