@@ -354,6 +354,25 @@ class HarborClient(object):
             logging.error("Fail to delete repository: {}".format(repo_name))
         return result
 
+    # GET /repositories/{repo_name}/tags/{tag}
+    def check_repository_tag_exist(self, repo_name, tag):
+        result = None
+        endpoint = 'api/repositories/{}/tags/{}'.format(repo_name, tag)
+        path = '{}/{}'.format(self.based_url, endpoint)
+        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        if response.status_code == 200:
+            result = True
+            logging.debug('Successfully check tag {}:{} existence, result: {}'.format(repo_name, tag, result))
+        elif response.status_code == 401:
+            result = False
+            logging.info('Need to be logged in.')
+        elif response.status_code == 404:
+            result = False
+            logging.debug('Successfully check project exist, result: {}'.format(result))
+        else:
+            logging.error('Fail to check project existence')
+        return result
+
     # DELETE /repositories/{repo_name}/tags/{tag}
     def delete_repository_tag(self, repo_name, tag):
         result = False
@@ -367,12 +386,8 @@ class HarborClient(object):
             logging.error("Fail to delete tag {}:{}".format(repo_name, tag))
         return result
 
-    # Get /repositories/{repo_name}/tags
+    # GET /repositories/{repo_name}/tags
     def get_repository_tags(self, repo_name):
-        """
-        :param repo_name: has format - "project_name/image_name"
-        :return:
-        """
         result = None
         endpoint = 'api/repositories/{}/tags'.format(repo_name)
         path = '{}/{}'.format(self.based_url, endpoint)
