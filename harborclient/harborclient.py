@@ -324,19 +324,30 @@ class HarborClient(object):
             logging.error("Fail to get repositories result with id: {}".format(project_id))
         return result
 
-    # DELETE /repositories
+    # DELETE /repositories/{repo_name}
     def delete_repository(self, repo_name, tag=None):
-        # TODO: support to check tag
-        # TODO: return 200 but the repo is not deleted, need more test
         result = False
-        path = '{}://{}/api/repositories?repo_name={}'.format(self.protocol, self.host, repo_name)
-        response = requests.delete(path, cookies={'beegosessionID': self.session_id})
-
+        endpoint = 'api/repositories/{}'.format(repo_name)
+        path = '{}/{}'.format(self.based_url, endpoint)
+        response = requests.delete(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = True
             logging.debug('Successfully delete repository: {}'.format(repo_name))
         else:
             logging.error('Failed to delete repository: {}'.format(repo_name))
+        return result
+
+    # DELETE /repositories/{repo_name}/tags/{tag}
+    def delete_repository_tag(self, repo_name, tag):
+        result = False
+        endpoint = 'api/repositories/{}/tags/{}'.format(repo_name, tag)
+        path = '{}/{}'.format(self.based_url, endpoint)
+        response = requests.delete(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        if response.status_code == 200:
+            result = True
+            logging.debug("Successfully delete tag {}:{}".format(repo_name, tag))
+        else:
+            logging.error("Fail to delete tag {}:{}".format(repo_name, tag))
         return result
 
     # Get /repositories/{repo_name}/tags
