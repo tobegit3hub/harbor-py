@@ -91,15 +91,6 @@ class HarborClient(object):
             logging.error("Fail to get projects result")
         return result
 
-    def get_project_by_name(self, project_name, is_public=True):
-        projects = self.get_projects(is_public=is_public)
-        for project in projects:
-            if project.get('name') == project_name:
-                return project
-
-        logging.debug('There is no project with name {}'.format(project_name))
-        return None
-
     def check_project_exists(self, project_name):
         """
         HEAD /projects
