@@ -485,7 +485,7 @@ class HarborClient(object):
 # TODO: remove it
 """
 this part only for testing
-./harborclient.py --user admin --host harbor.lss.emc.com --passwd VERY_SECRET_PASSWORD
+./harborclient_light.py --user admin --host harbor.lss.emc.com --passwd VERY_SECRET_PASSWORD
 """
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
