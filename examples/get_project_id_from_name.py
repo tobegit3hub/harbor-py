@@ -3,7 +3,7 @@
 import sys
 sys.path.append("../")
 
-from harborclient import harborclient
+from harborclient_light import harborclient
 
 host = "127.0.0.1"
 user = "admin"

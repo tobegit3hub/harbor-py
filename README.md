@@ -36,7 +36,7 @@
 ## Installation
 
 ```
-pip install harbor-py
+pip install harbor-py-light
 ```
 
 ## Usage

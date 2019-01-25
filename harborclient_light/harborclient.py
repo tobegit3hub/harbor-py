@@ -503,4 +503,3 @@ class HarborClient(object):
         else:
             logging.error('Failed to get configurations')
 
-
