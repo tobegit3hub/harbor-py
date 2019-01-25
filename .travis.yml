@@ -1,0 +1,20 @@
+language: python
+python:
+- '2.6'
+- '2.7'
+- '3.3'
+- '3.4'
+- '3.5'
+- 3.5-dev
+- '3.6'
+- 3.6-dev
+- 3.7-dev
+install:
+- pip install -r requirements.txt
+script:
+- python setup.py sdist bdist_wheel
+deploy:
+  provider: pypi
+  user: fedos
+  password:
+    secure: Np/Gul5h2TnO/nX5Fc8NVJ4eR+tSk7q4QJeP98lVEYuqQhDL93HlhskSU1uM0Icv+7RI5d57wOb8gbxK8ExTWyH6vhICRT57mf8AXnxiCxWtu88mmvN2y/pVoxa/E7sC35gcpN5lRNF3QQKITydYpr2+GJVwtXwJXo3WEtUs9DgyyFqBRltyTnvDGVWZDrQCVVCRvZ7Ee7yhumlSEuLOk2WWtZGcMc4rikrYMGhKgGfGC0DdBj8M80jd4d5zxfe6vhbpkOTD23yw3D4DNY7wMmqiXY0B+XQDIspHp6dT1u6ZwXf0A3mz2QRF24VWXrV/efYdVMM1xz3BHw29gzEjJKcpguVCb/r6EdepbRVIw/ep5iBxJXgEidDs//s7UdyW+aTenEQS/Szj+3hg8Aewzu+dGp65ceXITwR4XGCbzBxi7lczfLDISMbqsdra7TsBxwZctKuwFUqyM19iT8LGDhm4kEkYYkvlgoD87kPHW9frxm68iRGBQWcjTYyqodjKyC/LlHoWvsysQfdlHuMbPWS6P7vJSewutHpEvoXBKKf/dMx0+jRZ0X0RYXMvtgpej1sX9/A7MIfm3aXN6GbSwysYsefn4/juKu7YptCOIi6u1e4ZB9NAVQIXSk+C2v4pfIcOV8IIp1XJ3Cc5kwwRGU/pv9VWoEqYqESTIxvdFek=
