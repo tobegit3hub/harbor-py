@@ -14,7 +14,7 @@ class HarborClient(object):
         self.user = user
         self.password = password
         self.protocol = protocol
-        self.based_url = '%s://%s' % (self.protocol, self.host)
+        self.based_url = '{}://{}'.format(self.protocol, self.host)
         self.verify_ssl_cert = verify_ssl_cert
 
         self.session_id = self.login()
@@ -326,22 +326,18 @@ class HarborClient(object):
                     user_id, response.status_code))
         return result
 
-    # GET /repositories
-    def get_repositories(self, project_id, query_string=None):
-        # TODO: support parameter
+    # GET /repositories?project_id={project_id}
+    def get_repositories(self, project_id):
         result = None
-        path = '%s://%s/api/repositories?project_id=%s' % (
-            self.protocol, self.host, project_id)
-        response = requests.get(path,
-                                cookies={'beegosessionID': self.session_id})
+        endpoint = 'api/repositories?project_id={}'.format(project_id)
+        path = '{}/{}'.format(self.based_url, endpoint)
+        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug(
-                "Successfully get repositories with id: {}, result: {}".format(
-                    project_id, result))
+                "Successfully get images for repository {}, result: {}".format(project_id, result))
         else:
-            logging.error("Fail to get repositories result with id: {}".format(
-                project_id))
+            logging.error("Fail to get repositories result with id: {}".format(project_id))
         return result
 
     # DELETE /repositories
@@ -361,21 +357,22 @@ class HarborClient(object):
             logging.error("Fail to delete repository: {}".format(repo_name))
         return result
 
-    # Get /repositories/tags
+    # Get /repositories/{repo_name}/tags
     def get_repository_tags(self, repo_name):
+        """
+        :param repo_name: has format - "project_name/image_name"
+        :return:
+        """
         result = None
-        path = '%s://%s/api/repositories/tags?repo_name=%s' % (
-            self.protocol, self.host, repo_name)
-        response = requests.get(path,
-                                cookies={'beegosessionID': self.session_id})
+        endpoint = 'api/repositories/{}/tags'.format(repo_name)
+        path = '{}/{}'.format(self.based_url, endpoint)
+        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug(
-                "Successfully get tag with repo name: {}, result: {}".format(
-                    repo_name, result))
+                "Successfully get tags for {}, result: {}".format(repo_name, result))
         else:
-            logging.error("Fail to get tags with repo name: {}".format(
-                repo_name))
+            logging.error("Fail to get tags for repo: {}, code {}".format(repo_name, response.status_code))
         return result
 
     # GET /repositories/manifests
@@ -448,4 +445,6 @@ if __name__ == '__main__':
                           protocol='https',
                           verify_ssl_cert=False)
 
-    client.create_project('asd', True)
+    logging.info('=' * 139)
+    tags = client.get_repository_tags('shmelr/vnest')
+
