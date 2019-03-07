@@ -20,6 +20,7 @@
   - [x] [Delete repository](./examples/delete_repository.py)
   - [x] [Get repository tags](./examples/get_repository_tags.py)
   - [x] [Get repository manifests](./examples/get_repository_manifests.py)
+  - [x] [Retag image](./examples/retag_image.py)
 - [x] Others APIs
   - [x] [Search](./examples/search.py)
   - [x] [Get statistics](./examples/get_statistics.py)

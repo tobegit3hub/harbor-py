@@ -4,7 +4,7 @@ import json
 import logging
 import requests
 
-logging.basicConfig(level=logging.info)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class HarborClient(object):
@@ -25,13 +25,12 @@ class HarborClient(object):
         self.logout(log=False)
 
     def login(self):
-        login_url = '{}/login'.format(self.based_url)
+        login_url = '{}/c/login'.format(self.based_url)
         data = {'principal': self.user, 'password': self.password}
         login_data = requests.post(url=login_url, data=data, verify=self.verify_ssl_cert)
 
         if login_data.status_code == 200:
-            session_id = login_data.cookies.get('beegosessionID')
-
+            session_id = login_data.cookies.get('sid')
             logging.debug('Successfully login, session id: {}'.format(session_id))
             return session_id
         else:
@@ -40,7 +39,7 @@ class HarborClient(object):
 
     def logout(self, log=True):
         logout_url = '{}/log_out'.format(self.based_url)
-        requests.get(url=logout_url, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        requests.get(url=logout_url, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if log:
             logging.debug("Successfully logout")
 
@@ -52,17 +51,14 @@ class HarborClient(object):
         :return:
         """
         path = '{}://{}/api/projects?project_name={}'.format(self.protocol, self.host, project_name)
-        registry_data = requests.get(path, cookies={'beegosessionID': self.session_id},
-                                     verify=self.verify_ssl_cert)
+        registry_data = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
 
         if registry_data.status_code == 200 and registry_data.json():
             project_id = registry_data.json()[0]['project_id']
-            logging.debug('Successfully get project id: {}, project name: {}'.format(project_id,
-                                                                                     project_name))
+            logging.debug('Successfully get project id: {}, project name: {}'.format(project_id, project_name))
             return project_id
         else:
-            logging.error("Fail to get project id from project name",
-                          project_name)
+            logging.error("Fail to get project id from project name", project_name)
             return None
 
     # GET /search
@@ -71,7 +67,7 @@ class HarborClient(object):
         path = '{}://{}/api/search?q={}'.format(self.protocol, self.host,
                                                 query_string)
         response = requests.get(path,
-                                cookies={'beegosessionID': self.session_id})
+                                cookies={'sid': self.session_id})
         if response.status_code == 200:
             result = response.json()
             logging.debug('Successfully get search result: {}'.format(result))
@@ -84,7 +80,7 @@ class HarborClient(object):
         result = None
         projects_path = '{}/api/projects'.format(self.based_url)
         path = '{}?is_public={}'.format(projects_path, 1 if is_public else 0)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug('Successfully get projects result: {}'.format(result))
@@ -101,7 +97,7 @@ class HarborClient(object):
         """
         result = False
         path = '{}://{}/api/projects?project_name={}'.format(self.protocol, self.host, project_name)
-        response = requests.head(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.head(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = True
             logging.debug('Successfully check project existence, result: {}'.format(result))
@@ -137,7 +133,7 @@ class HarborClient(object):
 
         print(request_body)
 
-        response = requests.post(path, cookies={'beegosessionID': self.session_id},
+        response = requests.post(path, cookies={'sid': self.session_id},
                                  data=request_body, verify=self.verify_ssl_cert)
 
         if response.status_code == 201:
@@ -157,7 +153,7 @@ class HarborClient(object):
             logging.error('Incorrect request data format.')
         else:
             logging.error('Failed to create project with project name: {}, response code: {}.'.format(
-                    project_name, response.status_code))
+                project_name, response.status_code))
         print(response)
         return result
 
@@ -169,7 +165,7 @@ class HarborClient(object):
         :return: info about project
         """
         path = '{}://{}/api/projects/{}'.format(self.protocol, self.host, project_id)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug('Successfully get projects result: {}'.format(result))
@@ -187,7 +183,7 @@ class HarborClient(object):
         :return: True if project is deleted
         """
         path = '{}://{}/api/projects/{}'.format(self.protocol, self.host, project_id)
-        response = requests.delete(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.delete(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             logging.info('Project is deleted successfully.')
             return True
@@ -208,7 +204,7 @@ class HarborClient(object):
         result = None
         path = '{}://{}/api/statistics'.format(self.protocol, self.host)
         response = requests.get(path,
-                                cookies={'beegosessionID': self.session_id})
+                                cookies={'sid': self.session_id})
         if response.status_code == 200:
             result = response.json()
             logging.debug('Successfully get statistics: {}'.format(result))
@@ -221,7 +217,7 @@ class HarborClient(object):
         # TODO: support parameter
         result = None
         path = '{}://{}/api/users'.format(self.protocol, self.host)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id})
+        response = requests.get(path, cookies={'sid': self.session_id})
         if response.status_code == 200:
             result = response.json()
             logging.debug('Successfully get users result: {}'.format(result))
@@ -238,7 +234,7 @@ class HarborClient(object):
                                    'password': password,
                                    'realname': realname,
                                    'comment': comment})
-        response = requests.post(path, cookies={'beegosessionID': self.session_id},
+        response = requests.post(path, cookies={'sid': self.session_id},
                                  data=request_body)
 
         if response.status_code == 201:
@@ -258,7 +254,7 @@ class HarborClient(object):
         request_body = json.dumps({'email': email,
                                    'realname': realname,
                                    'comment': comment})
-        response = requests.put(path, cookies={'beegosessionID': self.session_id},
+        response = requests.put(path, cookies={'sid': self.session_id},
                                 data=request_body)
         if response.status_code == 200:
             result = True
@@ -273,7 +269,7 @@ class HarborClient(object):
         result = False
         path = '{}://{}/api/users/{}?user_id={}'.format(self.protocol, self.host,
                                                         user_id, user_id)
-        response = requests.delete(path, cookies={'beegosessionID': self.session_id})
+        response = requests.delete(path, cookies={'sid': self.session_id})
 
         if response.status_code == 200:
             result = True
@@ -289,7 +285,7 @@ class HarborClient(object):
                                                                  user_id, user_id)
         request_body = json.dumps({'old_password': old_password,
                                    'new_password': new_password})
-        response = requests.put(path, cookies={'beegosessionID': self.session_id}, data=request_body)
+        response = requests.put(path, cookies={'sid': self.session_id}, data=request_body)
 
         if response.status_code == 200:
             result = True
@@ -304,7 +300,7 @@ class HarborClient(object):
         result = False
         path = '{}://{}/api/users/{}/sysadmin?user_id={}'.format(self.protocol, self.host,
                                                                  user_id, user_id)
-        response = requests.put(path, cookies={'beegosessionID': self.session_id})
+        response = requests.put(path, cookies={'sid': self.session_id})
 
         if response.status_code == 200:
             result = True
@@ -319,7 +315,7 @@ class HarborClient(object):
         result = None
         endpoint = 'api/repositories?project_id={}'.format(project_id)
         path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug(
@@ -337,7 +333,7 @@ class HarborClient(object):
         result = False
         endpoint = 'api/repositories/{}'.format(repo_name)
         path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.delete(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.delete(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = True
             logging.debug('Successfully delete repository: {}'.format(repo_name))
@@ -356,7 +352,7 @@ class HarborClient(object):
         result = False
         endpoint = 'api/repositories/{}/tags/{}'.format(repo_name, tag)
         path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.delete(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.delete(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = True
             logging.debug("Successfully delete tag {}:{}".format(repo_name, tag))
@@ -374,14 +370,43 @@ class HarborClient(object):
         result = None
         endpoint = 'api/repositories/{}/tags'.format(repo_name)
         path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
-            logging.debug(
-                "Successfully get tags for {}, result: {}".format(repo_name, result))
+            logging.debug('Successfully get tags for {}, result: {}'.format(repo_name, result))
         else:
-            logging.error("Fail to get tags for repo: {}, code {}".format(repo_name, response.status_code))
+            logging.error('Fail to get tags for repo: {}, code {}'.format(repo_name, response.status_code))
         return result
+
+    def retag_repository_image(self, repo_name, src_image, tag):
+        """
+        POST /repositories/{repo_name}/tags
+        retag existing image with another tag
+        :param repo_name: relevant repository name
+        :param src_image: source image to be retagged, e.g. 'stage/app:v1.0'
+        :param tag: new tag to be created
+        """
+        endpoint = 'api/repositories/{}/tags'.format(repo_name)
+        path = '{}/{}'.format(self.based_url, endpoint)
+
+        headers = {'accept': 'application/json',
+                   'Content-Type': 'application/json'}
+        request_body = json.dumps({'tag': tag, 'src_image': src_image, 'override': True})
+        response = requests.post(path, data=request_body, verify=self.verify_ssl_cert,
+                                 cookies={'sid': self.session_id}, headers=headers)
+
+        if response.status_code == 200:
+            logging.info('Successfully retag {}{} to {}'.format(repo_name, src_image, tag))
+        elif response.status_code == 400:
+            logging.error('Invalid image values provided.')
+        elif response.status_code == 401:
+            logging.error('User has no permission to the source project or destination project.')
+        elif response.status_code == 404:
+            logging.error('Project or repository not found.')
+        elif response.status_code == 409:
+            logging.error('Target tag already exists')
+        else:
+            logging.error('Unexpected internal errors.')
 
     def check_repository_tag_exist(self, repo_name, tag):
         """
@@ -394,7 +419,7 @@ class HarborClient(object):
         result = False
         endpoint = 'api/repositories/{}/tags/{}'.format(repo_name, tag)
         path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             logging.debug('Repository {}:{} exist.'.format(repo_name, tag))
             result = True
@@ -409,7 +434,7 @@ class HarborClient(object):
     def get_repository_manifests(self, repo_name, tag):
         result = None
         path = '{}://{}/api/repositories/manifests?repo_name={}&tag={}'.format(self.protocol, self.host, repo_name, tag)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id})
+        response = requests.get(path, cookies={'sid': self.session_id})
 
         if response.status_code == 200:
             result = response.json()
@@ -425,7 +450,7 @@ class HarborClient(object):
         path = '{}://{}/api/repositories/top'.format(self.protocol, self.host)
         if count:
             path += "?count={}".format(count)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id})
+        response = requests.get(path, cookies={'sid': self.session_id})
 
         if response.status_code == 200:
             result = response.json()
@@ -438,7 +463,7 @@ class HarborClient(object):
     def get_logs(self, lines=None, start_time=None, end_time=None):
         result = None
         path = '{}://{}/api/logs'.format(self.protocol, self.host)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id})
+        response = requests.get(path, cookies={'sid': self.session_id})
 
         if response.status_code == 200:
             result = response.json()
@@ -453,9 +478,9 @@ class HarborClient(object):
         Get general system info
         :return: JSON with system info
         """
-        endpoint = '/api/systeminfo'
+        endpoint = 'systeminfo'
         path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug('Successfully get system info: {}'.format(result))
@@ -471,7 +496,7 @@ class HarborClient(object):
         """
         endpoint = '/api/systeminfo/volumes'
         path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug('Successfully get system info: {}'.format(result))
@@ -489,9 +514,9 @@ class HarborClient(object):
         Get system configurations
         :return: JSON with configurations
         """
-        endpoint = '/api/configurations'
+        endpoint = '/configurations'
         path = '{}/{}'.format(self.based_url, endpoint)
-        response = requests.get(path, cookies={'beegosessionID': self.session_id}, verify=self.verify_ssl_cert)
+        response = requests.get(path, cookies={'sid': self.session_id}, verify=self.verify_ssl_cert)
         if response.status_code == 200:
             result = response.json()
             logging.debug('Get system configurations successfully: {}'.format(result))

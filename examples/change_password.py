@@ -1,9 +1,7 @@
 #!/usr/bin/env python
-
+from harborclient_light import harborclient
 import sys
 sys.path.append("../")
-
-from harborclient import harborclient
 
 host = "127.0.0.1"
 user = "admin"
